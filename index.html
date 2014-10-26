@@ -4,25 +4,123 @@
 	<title>Pixel Adrift</title>
 	<meta charset="utf-8">
 	<link rel="shortcut icon" href="/favicon.png" />
+	<link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
 	<style>
 		html {
 			background: #FAFAFA;
 		}
-		.image-wrapper {
+		.page-wrapper {
 			width:100%;
 			padding-top: 200px;
+			text-align: center;
 		}
-		
-	    
+		img {
+		    margin-bottom: 20px;
+		}
+		#logo-wrapper {
+		    margin-right: auto;
+		    margin-left: auto;
+		}
+		#message {
+		    font-family: 'Share Tech Mono', monospace;
+		    opacity: 0;
+		}
+		#question:hover {
+		    cursor:pointer;
+		    opacity: 0.7;
+		}
 		
 		
 	</style>
 </head>
 <body>
-	<div class="image-wrapper">
-		<center>
-			<img id="logo" src="images/Logos/logo_white_center.png" alt="Pixel Scape Logo" >	
-		</center>
+	<div class="page-wrapper">
+		    <div id="logo-wrapper">
+		    	<img id="logo" src="images/Logos/logo_white_center.png" alt="Pixel Scape Logo" >
+		    </div>
+            <div>
+                <img id="loading" src="images/Misc/building.png">
+            </div>
+            <div>
+                <img id="question" src="images/Misc/questionmark2.png">
+            </div>
+            <div id="message">
+                We are working on a game we think you will love.  Please stay tuned.
+            </div>
 	</div>
+	<script>
+	    var questionMark = document.getElementById("question");
+
+	    var message = document.getElementById("message");
+	    var displayed = false;
+	    var displaying = false;
+	    var start = null;
+	    var duration = 300;
+	    questionMark.addEventListener("click", function(){
+	        if (displaying) {
+	            return;
+	        }
+	        displaying = true;
+	        if (!displayed) {
+	            displayMessage();
+	        } else {
+	            hideMessage();
+	        }
+	        displayed = !displayed;
+	    })
+	    
+	    function displayMessage() {
+	        window.requestAnimationFrame(fadeIn);
+	    }
+	    
+	    function hideMessage() {
+
+	        window.requestAnimationFrame(fadeOut);
+	    }
+	    
+	    function setAlpha(element, alpha) {
+	        element.style.opacity = alpha; //For real browsers;
+            element.style.filter = "alpha(opacity=" + alpha * 100 + ")"; //For IE;
+	    }
+	    
+	    function fadeIn(timestamp) {
+	        //console.log("stamp: " + timestamp)
+	        if (start === null) {
+	            start = timestamp;
+	        }
+	        elapsed = timestamp - start;
+	        //console.log("elapsed: " + elapsed);
+
+	        alpha = Math.min(1, elapsed / duration)
+
+	        //console.log('alpha: ' + alpha);
+	        setAlpha(message, alpha);
+	        if (elapsed < duration) {
+	            window.requestAnimationFrame(fadeIn)
+	        } else {
+	            start = null;
+	            displaying = false;
+	        }
+	    }
+	    
+	    function fadeOut(timestamp) {
+	        //console.log("stamp: " + timestamp)
+	        if (start === null) {
+	            start = timestamp;
+	        }
+	        elapsed = timestamp - start;
+	        //console.log("elapsed: " + elapsed);
+
+	        alpha = Math.max(0,1 - elapsed / duration)
+
+	        setAlpha(message, alpha);
+	        if (elapsed < duration) {
+	            window.requestAnimationFrame(fadeOut)
+	        } else {
+	            start = null;
+                displaying = false;
+	        }
+	    }
+	</script>
 </body>
 </html>
